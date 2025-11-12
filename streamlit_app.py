@@ -65,24 +65,41 @@ st.markdown("""
 def load_model_and_preprocessor():
     """
     載入已訓練好的模型和預處理工具。
+    如果模型不存在，自動訓練一個簡單的 KNN 模型。
     
     想像過程:
     1. 檢查模型文件是否存在
-    2. 讀取模型 (像從冰箱拿出菜)
-    3. 初始化預處理工具
-    4. 載入測試數據
+    2. 如果存在，讀取模型 (像從冰箱拿出菜)
+    3. 如果不存在，快速訓練一個 (像現炒現做)
+    4. 初始化預處理工具
+    5. 載入測試數據
     """
     try:
         model_path = 'results/models/hosvd_model_latest.pkl'
         
         # 檢查模型文件是否存在
-        if not os.path.exists(model_path):
-            st.error("❌ 找不到模型!")  # 顯示紅色錯誤信息
-            return None, None, None, None
-        
-        # 從文件讀取模型
-        with open(model_path, 'rb') as f:
-            model = pickle.load(f)
+        if os.path.exists(model_path):
+            # 從文件讀取模型
+            with open(model_path, 'rb') as f:
+                model = pickle.load(f)
+        else:
+            # 模型不存在，快速訓練一個簡單模型
+            st.info("⏳ 首次使用，正在快速訓練模型... (這只需要 20-30 秒)")
+            from sklearn.neighbors import KNeighborsClassifier
+            from sklearn.preprocessing import StandardScaler
+            
+            # 載入數據
+            X_train, y_train, _, _ = load_data('mnist', normalize=True)
+            
+            # 為了加快速度，只用前 5000 張圖片訓練
+            X_train = X_train[:5000]
+            y_train = y_train[:5000]
+            
+            # 訓練簡單的 KNN 分類器
+            model = KNeighborsClassifier(n_neighbors=5, n_jobs=-1)
+            model.fit(X_train, y_train)
+            
+            st.success("✅ 模型訓練完成！")
         
         # 初始化預處理工具
         preprocessor = DataPreprocessor()
@@ -99,6 +116,8 @@ def load_model_and_preprocessor():
         
     except Exception as e:  # 如果出錯
         st.error(f"模型加載失敗: {e}")
+        import traceback
+        st.error(traceback.format_exc())
         return None, None, None, None
 
 def preprocess_image(image, size=(28, 28)):
