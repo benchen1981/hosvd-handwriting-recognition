@@ -5,7 +5,10 @@
 import numpy as np
 from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
-from keras.datasets import mnist, fashion_mnist
+try:
+    from tensorflow.keras.datasets import mnist, fashion_mnist
+except ImportError:
+    from keras.datasets import mnist, fashion_mnist
 import logging
 
 logger = logging.getLogger(__name__)

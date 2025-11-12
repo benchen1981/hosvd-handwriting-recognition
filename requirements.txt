@@ -3,6 +3,7 @@ numpy>=1.21.0
 scikit-learn>=1.0.0
 tensorly>=0.7.0
 scipy>=1.7.0
+tensorflow>=2.10.0
 
 # Data and visualization
 matplotlib>=3.5.0
