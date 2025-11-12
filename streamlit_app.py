@@ -267,7 +267,7 @@ elif page == "🎨 Draw Digit":
                     
                     col1, col2 = st.columns(2)
                     with col1:
-                        st.image(img, caption="Your Drawing", use_column_width=True)
+                        st.image(img, caption="Your Drawing", use_container_width=True)
                     
                     with col2:
                         st.markdown("### Prediction Result")
@@ -302,7 +302,7 @@ elif page == "📸 Upload Image":
                 
                 col1, col2 = st.columns(2)
                 with col1:
-                    st.image(image, caption="Uploaded Image", use_column_width=True)
+                            st.image(image, caption="Uploaded Image", use_container_width=True)
                 
                 with col2:
                     st.markdown("### Recognition Result")
