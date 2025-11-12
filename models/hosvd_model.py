@@ -5,10 +5,14 @@ HOSVD張量分解模型
 import numpy as np
 from scipy import linalg
 import tensorly as tl
+
+# 處理 Tensorly 版本相容性
+# Tensorly 0.9.0+ 使用 tucker 取代 higher_order_svd
 try:
     from tensorly.decomposition import higher_order_svd
 except (ImportError, ModuleNotFoundError):
-    from tensorly.decomposition._hosvd import higher_order_svd
+    from tensorly.decomposition import tucker as higher_order_svd
+
 import logging
 
 logger = logging.getLogger(__name__)
